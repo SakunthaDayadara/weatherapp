@@ -24,9 +24,8 @@ class _HomePageState extends State<HomePage> {
   final Constants _constants = Constants();
   static String apikey = "8eed1b03e2d3428f94584505232611";
 
-
   String location = 'Maharagama'; // Default location
-  String weatherIcon = 'heavycloud.png';
+  String weatherIcon = 'heavycloudy.png';
   int temperature = 0;
   int windSpeed = 0;
   int humidity = 0;
@@ -39,13 +38,16 @@ class _HomePageState extends State<HomePage> {
   String currentWeatherStatus = '';
 
   //API Call
-  String searchWeatherAPI = "https://api.weatherapi.com/v1/forecast.json?key=$apikey&days=7&q=";
+  String searchWeatherAPI =
+      "https://api.weatherapi.com/v1/forecast.json?key=$apikey&days=7&q=";
 
   void fetchWeatherData(String searchText) async {
     try {
-      var searchResult = await http.get(Uri.parse(searchWeatherAPI + searchText));
+      var searchResult =
+          await http.get(Uri.parse(searchWeatherAPI + searchText));
 
-      final weatherData = Map<String, dynamic>.from(json.decode(searchResult.body) ?? 'No data');
+      final weatherData = Map<String, dynamic>.from(
+          json.decode(searchResult.body) ?? 'No data');
 
       var locationData = weatherData["location"];
 
@@ -54,13 +56,15 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         location = getShortLocationName(locationData["name"]);
 
-        var parsedDate = DateTime.parse(locationData["localtime"].substring(0, 10));
+        var parsedDate =
+            DateTime.parse(locationData["localtime"].substring(0, 10));
         var newDate = DateFormat('MMMMEEEEd').format(parsedDate);
         currentDate = newDate;
 
         //updateWeather
         currentWeatherStatus = currentWeather["condition"]["text"];
-        weatherIcon = currentWeatherStatus.replaceAll(' ', '').toLowerCase() + ".png";
+        weatherIcon =
+            currentWeatherStatus.replaceAll(' ', '').toLowerCase() + ".png";
         temperature = currentWeather["temp_c"].toInt();
         windSpeed = currentWeather["wind_kph"].toInt();
         humidity = currentWeather["humidity"].toInt();
@@ -99,15 +103,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Container(
         width: size.width,
         height: size.height,
-        padding: const EdgeInsets.only(top: 70, left: 10, right: 10),
+        padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
         color: _constants.primaryColor.withOpacity(.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -135,57 +141,94 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Image.asset("assets/menu.png", width: 40, height: 40,),
+                      Image.asset(
+                        "assets/menu.png",
+                        width: 40,
+                        height: 40,
+                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset("assets/pin.png", width: 20,),
-                          const SizedBox(width: 2,),
-                          Text(location, style: const TextStyle(
+                          Image.asset(
+                            "assets/pin.png",
+                            width: 20,
+                          ),
+                          const SizedBox(
+                            width: 2,
+                          ),
+                          Text(
+                            location,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16.0,
-                            ),),
+                            ),
+                          ),
                           IconButton(
                             onPressed: () {
                               _cityController.clear();
                               showMaterialModalBottomSheet(
                                   context: context,
                                   builder: (context) => SingleChildScrollView(
-                                    controller: ModalScrollController.of(context),
-                                    child: Container(
-                                      height: size.height * .2,
-                                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10,),
-                                      child: Column(
-                                        children: [SizedBox(width: 70, child: Divider(
-                                              thickness: 3.5,
-                                              color:
-                                              _constants.primaryColor,
-                                            ),),
-                                          const SizedBox(height: 10,),
-                                          TextField(
-                                            onChanged: (searchText) {fetchWeatherData(searchText);},
-                                            controller: _cityController,
-                                            autofocus: true,
-                                            decoration: InputDecoration(
-                                                prefixIcon: Icon(Icons.search, color: _constants.primaryColor,),
-                                                suffixIcon: GestureDetector(
-                                                  onTap: () => _cityController.clear(),
-                                                  child: Icon(Icons.close, color: _constants.primaryColor,),
-                                                ),
-                                                hintText: 'Search city e.g. Maharagama',
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                    color: _constants.primaryColor,
-                                                  ),
-                                                  borderRadius: BorderRadius.circular(10),
-                                                )
-                                            ),
+                                    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                                        controller: ModalScrollController.of(context),
+                                        child: Container(
+                                          height: size.height * .2,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 20,
+                                            vertical: 10,
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                              );
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                width: 70,
+                                                child: Divider(
+                                                  thickness: 3.5,
+                                                  color:
+                                                      _constants.primaryColor,
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                height: 10,
+                                              ),
+                                              TextField(
+                                                onChanged: (searchText) {
+                                                  fetchWeatherData(searchText);
+                                                },
+                                                controller: _cityController,
+                                                autofocus: true,
+                                                decoration: InputDecoration(
+                                                    prefixIcon: Icon(
+                                                      Icons.search,
+                                                      color: _constants
+                                                          .primaryColor,
+                                                    ),
+                                                    suffixIcon: GestureDetector(
+                                                      onTap: () =>
+                                                          _cityController
+                                                              .clear(),
+                                                      child: Icon(
+                                                        Icons.close,
+                                                        color: _constants
+                                                            .primaryColor,
+                                                      ),
+                                                    ),
+                                                    hintText:
+                                                        'Search city e.g. Maharagama',
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                        color: _constants
+                                                            .primaryColor,
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ));
                             },
                             icon: const Icon(
                               Icons.keyboard_arrow_down,
@@ -196,7 +239,11 @@ class _HomePageState extends State<HomePage> {
                       ),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.asset("assets/profile.png", width: 40, height: 40,),
+                        child: Image.asset(
+                          "assets/profile.png",
+                          width: 40,
+                          height: 40,
+                        ),
                       ),
                     ],
                   ),
@@ -292,7 +339,13 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_)=> DetailPage(dailyForecastWeather: dailyWeatherForecast,))), //this will open forecast screen
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => DetailPage(
+                                      dailyForecastWeather:
+                                          dailyWeatherForecast,
+                                    ))), //this will open forecast screen
                         child: Text(
                           'Forecasts',
                           style: TextStyle(
@@ -308,31 +361,27 @@ class _HomePageState extends State<HomePage> {
                     height: 8,
                   ),
                   SizedBox(
-                    height: 110,
+                    height: 109,
                     child: ListView.builder(
                       itemCount: hourlyWeatherForecast.length,
                       scrollDirection: Axis.horizontal,
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
                         String currentTime =
-                        DateFormat('HH:mm:ss').format(DateTime.now());
+                            DateFormat('HH:mm:ss').format(DateTime.now());
                         String currentHour = currentTime.substring(0, 2);
 
                         String forecastTime = hourlyWeatherForecast[index]
-                        ["time"]
+                                ["time"]
                             .substring(11, 16);
                         String forecastHour = hourlyWeatherForecast[index]
-                        ["time"]
+                                ["time"]
                             .substring(11, 13);
 
-                        String forecastWeatherName =
-                        hourlyWeatherForecast[index]["condition"]["text"];
+                        String forecastWeatherName = hourlyWeatherForecast[index]["condition"]["text"];
                         String forecastWeatherIcon = forecastWeatherName.replaceAll(' ', '').toLowerCase() + ".png";
 
-                        String forecastTemperature =
-                        hourlyWeatherForecast[index]["temp_c"]
-                            .round()
-                            .toString();
+                        String forecastTemperature = hourlyWeatherForecast[index]["temp_c"].round().toString();
                         return Container(
                           padding: const EdgeInsets.symmetric(vertical: 15),
                           margin: const EdgeInsets.only(right: 20),
@@ -342,13 +391,13 @@ class _HomePageState extends State<HomePage> {
                                   ? Colors.white
                                   : _constants.primaryColor,
                               borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
+                                  const BorderRadius.all(Radius.circular(50)),
                               boxShadow: [
                                 BoxShadow(
                                   offset: const Offset(0, 1),
                                   blurRadius: 5,
                                   color:
-                                  _constants.primaryColor.withOpacity(.2),
+                                      _constants.primaryColor.withOpacity(.2),
                                 ),
                               ]),
                           child: Column(
@@ -369,12 +418,15 @@ class _HomePageState extends State<HomePage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    forecastTemperature,
-                                    style: TextStyle(
-                                      color: _constants.greyColor,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.w600,
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        forecastTemperature,
+                                        style: TextStyle(
+                                        color: _constants.greyColor,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w600,
+                                        ),
                                     ),
                                   ),
                                   Text(
@@ -382,10 +434,8 @@ class _HomePageState extends State<HomePage> {
                                     style: TextStyle(
                                       color: _constants.greyColor,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 17,
-                                      fontFeatures: const [
-                                        FontFeature.enable('sups'),
-                                      ],
+                                      fontSize: 10,
+
                                     ),
                                   ),
                                 ],
