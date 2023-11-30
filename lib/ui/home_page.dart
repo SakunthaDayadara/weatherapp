@@ -113,11 +113,19 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         width: size.width,
         height: size.height,
-        padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
-        color: _constants.primaryColor.withOpacity(.1),
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/nsky.jpg"),
+            fit: BoxFit.cover,
+          ),
+
+        ),
+        padding: const EdgeInsets.only(top: 50, left: 10, right: 10),
+        //color: _constants.primaryColor.withOpacity(.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+
             Container(
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               height: size.height * .7,
