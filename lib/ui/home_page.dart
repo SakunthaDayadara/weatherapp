@@ -20,19 +20,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final TextEditingController _cityController = TextEditingController();
+  final TextEditingController _cityController = TextEditingController(); // Controller for the city input field
   final Constants _constants = Constants();
   static String apikey = "8eed1b03e2d3428f94584505232611";
 
   String location = 'Maharagama'; // Default location
-  String weatherIcon = 'heavycloudy.png';
+  String weatherIcon = 'heavycloudy.png'; // Default weather icon
   int temperature = 0;
   int windSpeed = 0;
   int humidity = 0;
   int cloud = 0;
   String currentDate = '';
 
-  List hourlyWeatherForecast = [];
+  List hourlyWeatherForecast = []; // Lists to store hourly and daily weather forecast data
   List dailyWeatherForecast = [];
 
   String currentWeatherStatus = '';
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   String searchWeatherAPI =
       "https://api.weatherapi.com/v1/forecast.json?key=$apikey&days=7&q=";
 
-  void fetchWeatherData(String searchText) async {
+  void fetchWeatherData(String searchText) async { // Function to fetch weather data based on the provided search text
     try {
       var searchResult =
           await http.get(Uri.parse(searchWeatherAPI + searchText));
@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
 
       var currentWeather = weatherData["current"];
 
-      setState(() {
+      setState(() { // Update state variables with the fetched data
         location = getShortLocationName(locationData["name"]);
 
         var parsedDate =
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState() {
+  void initState() { // Initialize the state and fetch initial weather data on screen load
     fetchWeatherData(location);
     super.initState();
   }
